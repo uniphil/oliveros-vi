@@ -143,7 +143,7 @@ END HUSL-GLSL
 #define H 720
 #define W 1280
 #define START 1.
-#define END 10.
+#define END 1000.
 #define OFFSET 0.
 
 uniform vec2 u_resolution;
@@ -277,7 +277,7 @@ void main() {
 
   gl_FragColor = (
     hvToRgb(colourize(l1v, 7., 13.)) +
-    hvToRgb(colourize(l2v, 11., 17.))
-    + hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 3.))
+    hvToRgb(colourize(l2v, 11., 17.)) +
+    hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 3.))
   ) / 1. * (.5 * rand(p) + .5) * mask() * show_window();
 }

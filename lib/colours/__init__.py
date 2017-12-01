@@ -7,7 +7,6 @@ with open(path.join(path.dirname(__file__), 'fragment-template.frag')) as f:
     FRAG_SRC = f.read()
 
 def make_frag(start, end, offset):
-    print('{}, {}, {}'.format(start, end, offset))
     src = FRAG_SRC\
         .replace('#define OFFSET 0.', '#define OFFSET {}'.format(offset))\
         .replace('#define START 1.', '#define START {}'.format(start))\
@@ -21,22 +20,25 @@ class colours():
         self.start = float(start)
         self.end = float(end)
         self.n = n
+        self.ps = []
 
     def __enter__(self):
         for _ in range(self.n):
             offset = random() * self.end * 10 * self.n;
             frag = make_frag(self.start, self.end, offset)
-            Popen([
+            proc = Popen([
                 'glslViewer', frag, '-l',
                 '-x', '0', '-y', '0',
                 '-w', '1280', '-h', '720',
             ])  # doesn't block woo
+            self.ps.append(proc)
 
     def __exit__(self, *exc):
-        pass
+        for proc in self.ps:
+            proc.terminate()
 
 
 if __name__ == '__main__':
     import time
-    with colours(1,2,1):
+    with colours(1,15,1):
         time.sleep(100)

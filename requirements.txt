@@ -1,0 +1,2 @@
+pyserial==3.4
+virtualenv==15.1.0

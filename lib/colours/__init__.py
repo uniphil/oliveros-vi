@@ -26,6 +26,7 @@ class colours():
         for _ in range(self.n):
             offset = random() * self.end * 10 * self.n;
             frag = make_frag(self.start, self.end, offset)
+            print('⚙  glslViewer', frag)
             proc = Popen([
                 'glslViewer', frag, '-l',
                 '-x', '0', '-y', '0',
@@ -35,6 +36,7 @@ class colours():
 
     def __exit__(self, *exc):
         for proc in self.ps:
+            print('× ', ' '.join(proc.args[:2]))
             proc.terminate()
 
 

@@ -278,6 +278,6 @@ void main() {
   gl_FragColor = (
     hvToRgb(colourize(l1v, 7., 13.)) +
     hvToRgb(colourize(l2v, 11., 17.)) +
-    hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 3.))
+    hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 4.))
   ) / 1. * (.5 * rand(p) + .5) * mask() * show_window();
 }

@@ -4,9 +4,10 @@ from serial import Serial
 
 @contextmanager
 def outlets(port):
-    def set(ser, state):
-        print('🔌 ', 'on' if state else 'off')
-        ser.write(b'1' if state else b'0')
+    def set(ser, media, heat):
+        print('⏻  media', 'on' if media else 'off')
+        print('⏻  heat', 'on' if heat else 'off')
+        ser.write(b'1' if media else b'0')
 
     with Serial(port=port, baudrate=9600) as ser:
         print('🔌  serial', port)

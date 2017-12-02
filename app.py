@@ -7,4 +7,4 @@ if __name__ == '__main__':
         power(True)
         time.sleep(5)
         power(False)
-        time.sleep(50)
+        time.sleep(5000)

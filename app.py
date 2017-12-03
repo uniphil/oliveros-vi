@@ -1,10 +1,10 @@
 import sys, time
 from lib import colours, lights, noise, outlets
 
-POWER_SER = '/dev/cu.usbmodem1411'
+POWER_SER = '/dev/cu.usbmodem1421'
 DMX_SER = '/dev/cu.usbserial-AL03OOPG'
 COLOURS_START = 5
-COLOURS_END = 10
+COLOURS_END = 3600
 t0 = time.time()
 
 print('🌈  OLIVEROS SONIC MEDITATION VI 🌈')
@@ -16,7 +16,10 @@ except:
 print('   starts in {} seconds.'.format(delay))
 print()
 
-with outlets(POWER_SER) as power, lights(DMX_SER) as lamps, colours(delay + COLOURS_START, delay + COLOURS_END, 1):
+# lights(DMX_SER) as lamps,\
+with outlets(POWER_SER) as power,\
+    colours(delay + COLOURS_START, delay + COLOURS_END, 3):
+
     power(media=True, heat=True)
     print()
 
@@ -37,11 +40,11 @@ with outlets(POWER_SER) as power, lights(DMX_SER) as lamps, colours(delay + COLO
     with noise():
         power(media=True, heat=False)
         time.sleep(1)
-        lamps.on()
+        # lamps.on()
         from random import random
-        while True:
-            r, g, b = int(random() * 255), int(random() * 255), int(random() * 255)
-            lamps.rgb(r, g, b)
-            time.sleep(0.5)
+        # while True:
+        #     r, g, b = int(random() * 255), int(random() * 255), int(random() * 255)
+        #     lamps.rgb(r, g, b)
+        #     time.sleep(0.5)
         time.sleep(5000)
 

@@ -265,7 +265,7 @@ float show_window() {
 }
 
 void main() {
-  t = u_time + OFFSET;
+  t = (u_time / 10.) + OFFSET;
   vec2 p = (gl_FragCoord.xy - vec2(W / 2, H / 2)) * (sin(t / 80.) + 6.) / 3.;  // / 4.
 
   float g = grid(rotate(p, sin(t / 27.) / 3.) / 7.);

@@ -146,7 +146,7 @@ END HUSL-GLSL
 #define END 1000.
 #define OFFSET 0.
 
-#define GREETING_BRIGHT .5
+#define GREETING_BRIGHT 0.
 
 #define GREETING 60.
 #define HOUSE_FADE_OUT 35.
@@ -320,19 +320,23 @@ void main() {
     if (u_time > DAYLIGHT) {
       if (u_time < DAYLIGHT + DAYLIGHT_FADE_IN) {
         float baseline = (u_time - DAYLIGHT) / DAYLIGHT_FADE_IN;
-        gl_FragColor += vec4(baseline, baseline, baseline, .9);
+        gl_FragColor += vec4(baseline, baseline, baseline, .2);
       } else {
-        gl_FragColor = vec4(1., 1., 1., 1.);
+        gl_FragColor = vec4(1., 1., 1., .2);
       }
     }
     return;
-  } else if (u_time < END_BLUE) {
+  } else {
     gl_FragColor = vec4(0., 0., 0., 0.);
     return;
-  } else if (u_time < END_BLUE + END_BLUE_FADE_IN) {
-    gl_FragColor = vec4(0., 0., 1., (u_time - END_BLUE) / END_BLUE_FADE_IN);
-  } else {
-    gl_FragColor = vec4(0., 0., 1., 1.);
-    return;
   }
+  // } else if (u_time < END_BLUE) {
+  //   gl_FragColor = vec4(0., 0., 0., 0.);
+  //   return;
+  // } else if (u_time < END_BLUE + END_BLUE_FADE_IN) {
+  //   gl_FragColor = vec4(0., 0., 1., (u_time - END_BLUE) / END_BLUE_FADE_IN);
+  // } else {
+  //   gl_FragColor = vec4(0., 0., 1., 1.);
+  //   return;
+  // }
 }

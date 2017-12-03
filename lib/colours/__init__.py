@@ -6,29 +6,52 @@ from tempfile import NamedTemporaryFile
 with open(path.join(path.dirname(__file__), 'fragment-template.frag')) as f:
     FRAG_SRC = f.read()
 
-def make_frag(t0, delay, offset):
+def make_frag(config, offset):
     src = FRAG_SRC\
-        .replace('#define GREETING 60.', '#define GREETING {}'.format(delay))\
-        .replace('#define OFFSET 0.', '#define OFFSET {}'.format(offset))
-        # .replace('#define START 1.', '#define START {}'.format(start))\
-        # .replace('#define END 1000.', '#define END {}'.format(end))
+        .replace('#define OFFSET 0.', '#define OFFSET {}'.format(offset))\
+        .replace('#define GREETING 60.', '#define GREETING {}'.format(config.GREETING))\
+        .replace('#define HOUSE_FADE_OUT 35.', '#define HOUSE_FADE_OUT {}'.format(config.HOUSE_FADE_OUT))\
+        .replace('#define FLASH (GREETING + 150.)', '#define FLASH (GREETING + {})'.format(config.FLASH))\
+        .replace('#define COLOURS (GREETING + 300.)', '#define COLOURS (GREETING + {})'.format(config.COLOURS))\
+        .replace('#define DAYLIGHT (GREETING + 340.)', '#define DAYLIGHT (GREETING + {})'.format(config.DAYLIGHT))\
+        .replace('#define DAYLIGHT_FADE_IN 35.', '#define DAYLIGHT_FADE_IN {}'.format(config.DAYLIGHT_FADE_IN))\
+        .replace('#define BLACKOUT (GREETING + 409.77)', '#define BLACKOUT (GREETING + {})'.format(config.BLACKOUT))\
+        .replace('#define END_BLUE (GREETING + 480.)', '#define END_BLUE (GREETING + {})'.format(config.END_BLUE))\
+        .replace('#define END_BLUE_FADE_IN 15.', '#define END_BLUE_FADE_IN {}'.format(config.END_BLUE_FADE_IN))
     with NamedTemporaryFile(suffix='.frag', delete=False) as f:
         f.write(src.encode())
     return f.name
 
 class colours():
-    def __init__(self, t0, delay, start=1, end=5, n=3, *args):
+    def __init__(self, t0, delay, n,
+                GREETING,
+                HOUSE_FADE_OUT,
+                FLASH,
+                COLOURS,
+                DAYLIGHT,
+                DAYLIGHT_FADE_IN,
+                BLACKOUT,
+                END_BLUE,
+                END_BLUE_FADE_IN):
         self.t0 = t0
         self.delay = delay
-        self.start = float(start)
-        self.end = float(end)
         self.n = n
+        self.GREETING = GREETING
+        self.HOUSE_FADE_OUT = HOUSE_FADE_OUT
+        self.FLASH = FLASH
+        self.COLOURS = COLOURS
+        self.DAYLIGHT = DAYLIGHT
+        self.DAYLIGHT_FADE_IN = DAYLIGHT_FADE_IN
+        self.BLACKOUT = BLACKOUT
+        self.END_BLUE = END_BLUE
+        self.END_BLUE_FADE_IN = END_BLUE_FADE_IN
+
         self.ps = []
 
     def __enter__(self):
         for _ in range(self.n):
-            offset = random() * self.end * 10 * self.n;
-            frag = make_frag(self.t0, self.delay, offset)
+            offset = random() * 80000 * self.n;
+            frag = make_frag(self, offset)
             print('⚙  glslViewer', frag)
             proc = Popen([
                 'glslViewer', frag, '-l',

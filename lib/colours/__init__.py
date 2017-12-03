@@ -30,7 +30,7 @@ class colours():
             proc = Popen([
                 'glslViewer', frag, '-l',
                 '-x', '0', '-y', '0',
-                '-w', '1280', '-h', '720',
+                '-w', '640', '-h', '360',
             ])  # doesn't block woo
             self.ps.append(proc)
 

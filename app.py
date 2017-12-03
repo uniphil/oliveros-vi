@@ -3,6 +3,7 @@ from lib import colours, lights, noise, outlets
 
 POWER_SER = '/dev/cu.usbmodem1421'
 DMX_SER = '/dev/cu.usbserial-AL03OOPG'
+SCREENS = 1
 COLOURS_START = 5
 COLOURS_END = 3600
 t0 = time.time()
@@ -18,7 +19,7 @@ print()
 
 # lights(DMX_SER) as lamps,\
 with outlets(POWER_SER) as power,\
-    colours(delay + COLOURS_START, delay + COLOURS_END, 3):
+    colours(delay + COLOURS_START, delay + COLOURS_END, SCREENS):
 
     power(media=True, heat=True)
     print()

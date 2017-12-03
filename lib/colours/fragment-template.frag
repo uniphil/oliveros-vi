@@ -150,8 +150,9 @@ uniform vec2 u_resolution;
 uniform float u_time;
 float t;
 
-float rand(vec2 co) {
-    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+float rand() {
+    vec2 seed = gl_FragCoord.xy * u_time;
+    return fract(sin(dot(seed, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
 vec2 colourize(float v, float p1, float p2) {
@@ -279,5 +280,5 @@ void main() {
     hvToRgb(colourize(l1v, 7., 13.)) +
     hvToRgb(colourize(l2v, 11., 17.)) +
     hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 4.))
-  ) / 1. * (.5 * rand(p) + .5) * mask() * show_window();
+  ) / 1. * (.5 * rand() + .5) * mask() * show_window();
 }

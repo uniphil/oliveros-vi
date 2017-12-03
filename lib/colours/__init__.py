@@ -6,17 +6,20 @@ from tempfile import NamedTemporaryFile
 with open(path.join(path.dirname(__file__), 'fragment-template.frag')) as f:
     FRAG_SRC = f.read()
 
-def make_frag(start, end, offset):
+def make_frag(t0, delay, offset):
     src = FRAG_SRC\
-        .replace('#define OFFSET 0.', '#define OFFSET {}'.format(offset))\
-        .replace('#define START 1.', '#define START {}'.format(start))\
-        .replace('#define END 1000.', '#define END {}'.format(end))
+        .replace('#define GREETING 60.', '#define GREETING {}'.format(delay))\
+        .replace('#define OFFSET 0.', '#define OFFSET {}'.format(offset))
+        # .replace('#define START 1.', '#define START {}'.format(start))\
+        # .replace('#define END 1000.', '#define END {}'.format(end))
     with NamedTemporaryFile(suffix='.frag', delete=False) as f:
         f.write(src.encode())
     return f.name
 
 class colours():
-    def __init__(self, start=1, end=5, n=3):
+    def __init__(self, t0, delay, start=1, end=5, n=3, *args):
+        self.t0 = t0
+        self.delay = delay
         self.start = float(start)
         self.end = float(end)
         self.n = n
@@ -25,7 +28,7 @@ class colours():
     def __enter__(self):
         for _ in range(self.n):
             offset = random() * self.end * 10 * self.n;
-            frag = make_frag(self.start, self.end, offset)
+            frag = make_frag(self.t0, self.delay, offset)
             print('⚙  glslViewer', frag)
             proc = Popen([
                 'glslViewer', frag, '-l',

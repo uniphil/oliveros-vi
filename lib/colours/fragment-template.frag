@@ -146,6 +146,21 @@ END HUSL-GLSL
 #define END 1000.
 #define OFFSET 0.
 
+#define GREETING_BRIGHT .5
+
+#define GREETING 60.
+#define HOUSE_FADE_OUT 35.
+#define FLASH (GREETING + 150.)
+#define FLASH_DURATION 0.1
+#define COLOURS (GREETING + 300.)
+#define COLOURS_FADE 15.
+#define DAYLIGHT (GREETING + 340.)
+#define DAYLIGHT_FADE_IN 35.
+#define BLACKOUT (GREETING + 409.77)
+#define END_BLUE (GREETING + 480.)
+#define END_BLUE_FADE_IN 15.
+
+
 uniform vec2 u_resolution;
 uniform float u_time;
 float t;
@@ -266,19 +281,58 @@ float show_window() {
 }
 
 void main() {
-  t = (u_time / 10.) + OFFSET;
-  vec2 p = (gl_FragCoord.xy - vec2(W / 2, H / 2)) * (sin(t / 80.) + 6.) / 3.;  // / 4.
+  if (u_time < GREETING) {
+    gl_FragColor = vec4(1., 1., 1., GREETING_BRIGHT);
+    return;
+  } else if (u_time < GREETING + HOUSE_FADE_OUT) {
+    gl_FragColor = vec4(1., 1., 1., GREETING_BRIGHT * (1. - (u_time - GREETING) / HOUSE_FADE_OUT));
+    return;
+  } else if (u_time < FLASH) {
+    gl_FragColor = vec4(0., 0., 0., 0.);
+    return;
+  } else if (u_time < FLASH + FLASH_DURATION) {
+    gl_FragColor = vec4(1., 1., 1., 1.);
+    return;
+  } else if (u_time < COLOURS) {
+    gl_FragColor = vec4(0., 0., 0., 0.);
+    return;
+  } else if (u_time < BLACKOUT) {
+    t = (u_time / 10.) + OFFSET;
+    vec2 p = (gl_FragCoord.xy - vec2(W / 2, H / 2)) * (sin(t / 80.) + 6.) / 3.;  // / 4.
 
-  float g = grid(rotate(p, sin(t / 27.) / 3.) / 7.);
-  float pip = pipes(rotate(p, sin(-t / 38.) / 5.) / 7.);
-  float w = waves(p / 3.);
-  float c = circle(p / 4.);
-  float l1v = (g + pip) / 2.;
-  float l2v = (w + c) / 2.;
+    float g = grid(rotate(p, sin(t / 27.) / 3.) / 7.);
+    float pip = pipes(rotate(p, sin(-t / 38.) / 5.) / 7.);
+    float w = waves(p / 3.);
+    float c = circle(p / 4.);
+    float l1v = (g + pip) / 2.;
+    float l2v = (w + c) / 2.;
 
-  gl_FragColor = (
-    hvToRgb(colourize(l1v, 7., 13.)) +
-    hvToRgb(colourize(l2v, 11., 17.)) +
-    hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 4.))
-  ) / 1. * (.5 * rand() + .5) * mask() * show_window();
+    gl_FragColor = (
+      hvToRgb(colourize(l1v, 7., 13.)) +
+      hvToRgb(colourize(l2v, 11., 17.)) +
+      hvToRgb(vec2(sin(.4 + t / 20.) / 2. + .5, radgrad(p) / 4.))
+    ) / 1. * (.5 * rand() + .5) * mask() * show_window();
+
+    if (u_time < COLOURS + COLOURS_FADE) {
+      gl_FragColor *= (u_time - COLOURS) / COLOURS_FADE;
+    }
+
+    if (u_time > DAYLIGHT) {
+      if (u_time < DAYLIGHT + DAYLIGHT_FADE_IN) {
+        float baseline = (u_time - DAYLIGHT) / DAYLIGHT_FADE_IN;
+        gl_FragColor += vec4(baseline, baseline, baseline, .9);
+      } else {
+        gl_FragColor = vec4(1., 1., 1., 1.);
+      }
+    }
+    return;
+  } else if (u_time < END_BLUE) {
+    gl_FragColor = vec4(0., 0., 0., 0.);
+    return;
+  } else if (u_time < END_BLUE + END_BLUE_FADE_IN) {
+    gl_FragColor = vec4(0., 0., 1., (u_time - END_BLUE) / END_BLUE_FADE_IN);
+  } else {
+    gl_FragColor = vec4(0., 0., 1., 1.);
+    return;
+  }
 }

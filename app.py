@@ -6,14 +6,14 @@ DMX_SER = '/dev/cu.usbserial-AL03OOPG'
 SCREENS = 3
 
 # FAST VERSION
-HOUSE_FADE_OUT = 3.
-FLASH = 145.
-COLOURS = 300.
-DAYLIGHT = 340.
-DAYLIGHT_FADE_IN = 3.
-BLACKOUT = 409.77
-END_BLUE = 480
-END_BLUE_FADE_IN = 3.
+HOUSE_FADE_OUT = 720.
+FLASH = 1680.
+COLOURS = 3600.
+DAYLIGHT = 5820.
+DAYLIGHT_FADE_IN = 475.
+BLACKOUT = 6300.
+END_BLUE = 7100.
+END_BLUE_FADE_IN = 10.
 
 t0 = time.time()
 
@@ -59,7 +59,7 @@ with qlclient() as lights,\
         print()
         time.sleep(wait)
 
-    with noise(True):
+    with noise():
 
         while time.time() < t0 + GREETING + HOUSE_FADE_OUT:
             lights.house(1 - (time.time() - (t0 + GREETING)) / HOUSE_FADE_OUT)
